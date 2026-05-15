@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MU Feed UI - Project Summary</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #101012;
+      --panel: #18181b;
+      --panel-soft: #202024;
+      --line: #2c2c31;
+      --text: #f8f8f8;
+      --muted: #b9b9c0;
+      --dim: #83838d;
+      --gold: #f2bd65;
+      --gold-dark: #332916;
+      --blue: #7db9ff;
+      --green: #67d46f;
+      color-scheme: dark;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        linear-gradient(180deg, rgba(16, 16, 18, .78), var(--bg) 520px),
+        url("assets/feed-bg.png"),
+        var(--bg);
+      background-position: center top, center top, center;
+      background-repeat: no-repeat;
+      background-size: 100% auto;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 52px 0 64px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr);
+      gap: 28px;
+      align-items: end;
+      padding: 44px 0 34px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 28px;
+      height: 2px;
+      border-radius: 999px;
+      background: var(--gold);
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 760px;
+      font-size: clamp(40px, 7vw, 82px);
+      line-height: .96;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      margin: 22px 0 0;
+      max-width: 690px;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    .hero-card {
+      border: 1px solid rgba(242, 189, 101, .28);
+      background: rgba(24, 24, 27, .88);
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, .28);
+    }
+
+    .hero-card h2,
+    .section-title {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: 0;
+    }
+
+    .facts {
+      display: grid;
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .fact {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .fact:last-child {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .fact strong {
+      color: var(--text);
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .button {
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 16px;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      background: var(--panel-soft);
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .button.primary {
+      border-color: rgba(242, 189, 101, .45);
+      background: var(--gold);
+      color: #17130b;
+    }
+
+    .section {
+      margin-top: 30px;
+      padding: 30px;
+      border: 1px solid var(--line);
+      background: rgba(24, 24, 27, .82);
+      border-radius: 8px;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .section-heading p {
+      margin: 0;
+      color: var(--dim);
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .tile {
+      min-height: 160px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      background: var(--panel-soft);
+      border-radius: 8px;
+    }
+
+    .tile .number {
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .tile h3 {
+      margin: 14px 0 10px;
+      font-size: 17px;
+      line-height: 1.35;
+    }
+
+    .tile p,
+    .note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 14px;
+      counter-reset: step;
+    }
+
+    .timeline-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 54px minmax(0, 1fr);
+      gap: 16px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      background: var(--panel-soft);
+      border-radius: 8px;
+    }
+
+    .timeline-item::before {
+      counter-increment: step;
+      content: counter(step);
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--gold-dark);
+      color: var(--gold);
+      font-weight: 800;
+    }
+
+    .timeline-item h3 {
+      margin: 0 0 6px;
+      font-size: 16px;
+    }
+
+    .timeline-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .list {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .list li {
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      background: var(--panel-soft);
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .list strong {
+      color: var(--text);
+    }
+
+    .tech {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .tag {
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #141417;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .callout {
+      margin-top: 30px;
+      padding: 24px;
+      border: 1px solid rgba(125, 185, 255, .32);
+      border-radius: 8px;
+      background: rgba(16, 34, 52, .64);
+    }
+
+    .callout p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    code {
+      padding: 3px 6px;
+      border-radius: 5px;
+      background: #111114;
+      color: var(--green);
+      font-family: Consolas, "Liberation Mono", monospace;
+      font-size: .95em;
+    }
+
+    @media (max-width: 860px) {
+      .hero,
+      .split,
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 28px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .page {
+        width: min(100% - 24px, 1120px);
+        padding-top: 28px;
+      }
+
+      .section,
+      .hero-card {
+        padding: 20px;
+      }
+
+      .section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .timeline-item {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div>
+        <span class="eyebrow">Project summary</span>
+        <h1>Masters' Union Feed UI</h1>
+        <p class="hero-copy">
+          This project recreates a polished social learning feed for Masters' Union. The work focuses on translating a detailed product interface into a responsive, interactive HTML prototype with structured feed cards, navigation, filters, reactions, comments, and branded visual styling.
+        </p>
+        <div class="actions">
+          <a class="button primary" href="index.html">Open the Feed UI</a>
+          <a class="button" href="assets/feed-bg.png">View Background Asset</a>
+        </div>
+      </div>
+
+      <aside class="hero-card" aria-label="Project facts">
+        <h2>At a glance</h2>
+        <div class="facts">
+          <div class="fact"><span>Main file</span><strong>index.html</strong></div>
+          <div class="fact"><span>Asset folder</span><strong>assets</strong></div>
+          <div class="fact"><span>Preview port</span><strong>4173</strong></div>
+          <div class="fact"><span>Stack</span><strong>HTML, CSS, JavaScript</strong></div>
+          <div class="fact"><span>Output</span><strong>Responsive UI prototype</strong></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <h2 class="section-title">What Was Built</h2>
+        <p>A product-like feed screen with real interface states and microinteractions.</p>
+      </div>
+      <div class="grid">
+        <article class="tile">
+          <span class="number">01</span>
+          <h3>Branded dashboard shell</h3>
+          <p>Created a fixed topbar, left navigation rail, profile area, search control, notification affordance, and a dark Masters' Union styled canvas.</p>
+        </article>
+        <article class="tile">
+          <span class="number">02</span>
+          <h3>Feed content system</h3>
+          <p>Designed reusable post structures for job posts, articles, attachments, authors, metadata, content previews, and social action rows.</p>
+        </article>
+        <article class="tile">
+          <span class="number">03</span>
+          <h3>Interactive behavior</h3>
+          <p>Added JavaScript for tab-based filtering, like count toggling, active states, and comment form submission feedback.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <h2 class="section-title">Work Breakdown</h2>
+        <p>The project moves from layout foundation to interaction polish.</p>
+      </div>
+      <div class="timeline">
+        <article class="timeline-item">
+          <div>
+            <h3>Interface foundation</h3>
+            <p>Set up the document structure, typography, theme variables, dark color system, fixed navigation areas, and the main dashboard layout.</p>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div>
+            <h3>Feed composition</h3>
+            <p>Built multiple content card types including file attachment posts, article previews, long text posts, author identity blocks, and engagement controls.</p>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div>
+            <h3>Responsive refinement</h3>
+            <p>Added media queries for desktop, tablet, and mobile widths so the sidebar, toolbar, cards, attachments, and comment controls adapt cleanly.</p>
+          </div>
+        </article>
+        <article class="timeline-item">
+          <div>
+            <h3>Preview workflow</h3>
+            <p>Included lightweight local server options through <code>preview-server.js</code> and <code>server.ps1</code> to serve the prototype and asset files from port <code>4173</code>.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <h2 class="section-title">Key Features</h2>
+        <p>These are the visible and functional pieces delivered in the prototype.</p>
+      </div>
+      <div class="split">
+        <ul class="list">
+          <li><strong>Search experience:</strong> A rounded search input with keyboard shortcut styling for a modern dashboard feel.</li>
+          <li><strong>Feed tabs:</strong> Latest, Trending, and For You filters driven by data attributes and JavaScript state updates.</li>
+          <li><strong>Post actions:</strong> Like buttons update the active style and adjust counts without reloading the page.</li>
+          <li><strong>Comment forms:</strong> Users can submit text, clear the input, and receive immediate placeholder feedback.</li>
+        </ul>
+        <ul class="list">
+          <li><strong>Attachment cards:</strong> File-style UI includes filename, file size, icon treatment, and download affordance.</li>
+          <li><strong>Article presentation:</strong> Article cards include title hierarchy, excerpt handling, read-more controls, and image placement.</li>
+          <li><strong>Accessible labels:</strong> Navigation, icon buttons, search, filters, and form controls include ARIA-friendly labels.</li>
+          <li><strong>Responsive behavior:</strong> Layout rules cover smaller screens, moving navigation and compressing controls as needed.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <h2 class="section-title">Technical Notes</h2>
+        <p>A compact static build with no dependency installation required.</p>
+      </div>
+      <p class="note">
+        The prototype is implemented as a static front-end page. Styling is written directly in <code>index.html</code> using CSS custom properties, responsive media queries, and component-specific class names. The behavior layer is small, readable JavaScript at the bottom of the page.
+      </p>
+      <div class="tech" aria-label="Technologies used">
+        <span class="tag">Semantic HTML</span>
+        <span class="tag">CSS custom properties</span>
+        <span class="tag">Responsive media queries</span>
+        <span class="tag">Vanilla JavaScript</span>
+        <span class="tag">Local static server</span>
+        <span class="tag">Image asset integration</span>
+      </div>
+      <div class="callout">
+        <h2 class="section-title">How to preview</h2>
+        <p>Open <code>index.html</code> directly for the main UI, or run <code>node preview-server.js</code> from the project folder and visit <code>http://127.0.0.1:4173/</code>. This summary page can be opened as <code>project-summary.html</code>.</p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
