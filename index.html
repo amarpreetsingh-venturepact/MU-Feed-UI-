@@ -1,0 +1,1249 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Masters' Union Feed</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0e0e10;
+      --nav: #050505;
+      --panel: #1a1a1a;
+      --panel-2: #1e1e1e;
+      --line: #2a2a2a;
+      --line-soft: #262626;
+      --text: #fafafa;
+      --muted: #b4b4b4;
+      --dim: #71717a;
+      --gold: #f2bd65;
+      --gold-soft: #373220;
+      --green: #52c41a;
+      --green-bg: #092b00;
+      --blue: #79b6ff;
+      --blue-bg: #08243e;
+      --danger: #ef4444;
+      color-scheme: dark;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { background: var(--bg); }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        linear-gradient(180deg, rgba(14, 14, 16, .15) 0, var(--bg) 470px),
+        url("assets/feed-bg.png"),
+        var(--bg);
+      background-position: center 64px, center 64px, center;
+      background-repeat: no-repeat;
+      background-size: 100% auto;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .topbar {
+      position: fixed;
+      z-index: 20;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: var(--nav);
+      border-bottom: 1px solid #111;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 220px;
+    }
+
+    .menu-dot,
+    .icon-button,
+    .side-item,
+    .quick-action {
+      display: inline-grid;
+      place-items: center;
+      color: #d7d7d7;
+    }
+
+    .menu-dot {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      color: #a7a7a7;
+      background: transparent;
+    }
+
+    .logo-mark {
+      width: 145px;
+      height: 40px;
+      object-fit: contain;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+      width: min(1143px, calc(100vw - 360px));
+    }
+
+    .search {
+      width: min(373px, 42vw);
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 4px 10px 4px 12px;
+      color: var(--muted);
+      background: var(--bg);
+      border: 1px solid #242424;
+      border-radius: 1000px;
+      font-size: 12px;
+    }
+
+    .search span:first-child {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .shortcut {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .key {
+      min-width: 24px;
+      height: 20px;
+      display: grid;
+      place-items: center;
+      padding: 0 6px;
+      border-radius: 4px;
+      background: #1d1d20;
+      font-size: 10px;
+      font-weight: 500;
+    }
+
+    .profile-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .icon-button {
+      position: relative;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: transparent;
+    }
+
+    .icon-button:hover,
+    .side-item:hover,
+    .quick-action:hover {
+      background: #18181b;
+    }
+
+    .notification::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      right: 5px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 0 2px var(--nav);
+    }
+
+    .avatar {
+      display: inline-grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      overflow: hidden;
+      border-radius: 50%;
+      background: var(--gold);
+      color: #171717;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .avatar img {
+      width: 150%;
+      height: 190%;
+      object-fit: cover;
+      object-position: center 28%;
+    }
+
+    .sidebar {
+      position: fixed;
+      z-index: 15;
+      top: 0;
+      left: 0;
+      width: 70px;
+      height: 100vh;
+      padding-top: 74px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--nav);
+      border-right: 1px solid #111;
+    }
+
+    .side-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      width: 100%;
+    }
+
+    .side-item {
+      width: 70px;
+      height: 48px;
+      color: #cfcfcf;
+      background: transparent;
+      border-left: 2px solid transparent;
+    }
+
+    .side-item.active {
+      color: var(--gold);
+      background: var(--bg);
+      border-left-color: var(--gold);
+    }
+
+    .side-bottom {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      width: 100%;
+      padding-bottom: 10px;
+    }
+
+    .side-bottom .avatar {
+      width: 45px;
+      height: 45px;
+    }
+
+    .dashboard {
+      position: relative;
+      min-height: 100vh;
+      padding: 108px 24px 64px 94px;
+    }
+
+    .feed-shell {
+      position: relative;
+      z-index: 1;
+      width: min(1000px, 100%);
+      margin: 0 auto;
+    }
+
+    .intro {
+      display: grid;
+      justify-items: center;
+      gap: 10px;
+      margin-bottom: 41px;
+      text-align: center;
+    }
+
+    .intro h1 {
+      margin: 0;
+      font-size: clamp(34px, 3.2vw, 45px);
+      line-height: 1.1;
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+
+    .intro h1 span {
+      color: var(--gold);
+      font-family: Caveat, cursive;
+      font-size: 1.15em;
+    }
+
+    .intro p {
+      margin: 0;
+      color: #e3e3e3;
+      font-size: 14px;
+      line-height: 1.1;
+    }
+
+    .feed-toolbar {
+      position: relative;
+      display: grid;
+      justify-items: center;
+      margin-bottom: 20px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0;
+      align-items: stretch;
+      padding: 6px;
+      border: 1px solid var(--line-soft);
+      border-radius: 999px;
+      background: #141414;
+    }
+
+    .tab {
+      min-height: 28px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 20px;
+      border-radius: 999px;
+      color: #d4d4d4;
+      background: #141414;
+      font-size: 13px;
+    }
+
+    .tab.active {
+      color: var(--gold);
+      background: var(--gold-soft);
+      font-weight: 500;
+    }
+
+    .pill-count {
+      min-width: 21px;
+      padding: 3px 6px;
+      border-radius: 90px;
+      color: #171717;
+      background: #f5ca83;
+      font-size: 11px;
+      line-height: 1;
+      text-align: center;
+    }
+
+    .tab:not(.active) .pill-count {
+      color: var(--text);
+      background: #2d2d31;
+    }
+
+    .filter {
+      position: absolute;
+      top: 0;
+      left: calc(50% + 460px);
+      width: 42px;
+      height: 42px;
+      border: 1.33px solid var(--line);
+      border-radius: 14px;
+      color: #d6d6d6;
+      background: #191919;
+    }
+
+    .feed-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .post-group {
+      overflow: hidden;
+      border-radius: 16px;
+    }
+
+    .post-card {
+      padding: 21px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+    }
+
+    .post-group .post-card {
+      border-radius: 16px 16px 0 0;
+    }
+
+    .post-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 15px;
+    }
+
+    .author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .initials {
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--gold);
+      color: #151515;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .author-main {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .name-row,
+    .meta-row,
+    .meta-group,
+    .time {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .name {
+      overflow: hidden;
+      color: #fff;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 1.1;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .label {
+      padding: 4px 8px;
+      border-radius: 14px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      line-height: 1.1;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .label.job {
+      color: var(--green);
+      background: var(--green-bg);
+    }
+
+    .label.article {
+      color: var(--blue);
+      background: var(--blue-bg);
+    }
+
+    .meta-row {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.1;
+      flex-wrap: wrap;
+    }
+
+    .meta-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #d9d9d9;
+    }
+
+    .more {
+      flex: 0 0 auto;
+      width: 24px;
+      height: 24px;
+      border-radius: 7px;
+      color: #cfcfcf;
+      background: transparent;
+      font-size: 20px;
+      line-height: 1;
+      transform: rotate(90deg);
+    }
+
+    .post-copy {
+      margin: 0 0 15px;
+      color: #e3e3e3;
+      font-size: 15px;
+      line-height: 24px;
+    }
+
+    .post-copy.long {
+      display: grid;
+      gap: 8px;
+      color: #e5e5e5;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .read-more {
+      width: fit-content;
+      color: var(--gold);
+      background: transparent;
+      padding: 0;
+      font-size: 12px;
+    }
+
+    .attachment {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 15px;
+      padding: 13px 23px 13px 13px;
+      border: 1px solid #27272a;
+      border-radius: 16px;
+      background: #111;
+    }
+
+    .file-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .file-icon {
+      display: grid;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      background: #27272a;
+    }
+
+    .file-page {
+      position: relative;
+      width: 18px;
+      height: 24px;
+      border-radius: 2px;
+      background: linear-gradient(135deg, #ef4444 0 70%, #fecaca 70%);
+    }
+
+    .file-page::after {
+      content: "PDF";
+      position: absolute;
+      left: 50%;
+      bottom: 4px;
+      transform: translateX(-50%);
+      color: #fff;
+      font-size: 6px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .file-name {
+      overflow: hidden;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.1;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .file-size {
+      margin-top: 5px;
+      color: #a1a1aa;
+      font-size: 12px;
+    }
+
+    .download {
+      flex: 0 0 auto;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      color: #d7d7d7;
+      background: transparent;
+    }
+
+    .actions-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .post-actions,
+    .action-button,
+    .seen-by {
+      display: flex;
+      align-items: center;
+    }
+
+    .post-actions {
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .action-button {
+      min-height: 32px;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 100px;
+      color: #e5e5e5;
+      background: rgba(39, 39, 42, .7);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .action-button.active {
+      color: #fff;
+    }
+
+    .heart {
+      color: var(--danger);
+      font-size: 14px;
+    }
+
+    .divider {
+      width: 1px;
+      height: 16px;
+      background: #3f3f46;
+    }
+
+    .action-count {
+      font-size: 13px;
+      font-weight: 400;
+    }
+
+    .seen-by {
+      gap: 8px;
+      color: #a1a1aa;
+      font-size: 11px;
+    }
+
+    .faces {
+      display: flex;
+      align-items: center;
+      padding-left: 14px;
+    }
+
+    .face {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      margin-left: -8px;
+      border: 2px solid var(--panel);
+      border-radius: 50%;
+      background: var(--gold);
+      color: #151515;
+      font-size: 9px;
+      font-weight: 700;
+    }
+
+    .comment-footer {
+      padding: 17px 16px 16px;
+      border: 1px solid var(--line);
+      border-top: 0;
+      border-radius: 0 0 16px 16px;
+      background: var(--panel-2);
+    }
+
+    .comment-form {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .add-btn {
+      flex: 0 0 auto;
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      color: #1a1a1a;
+      background: var(--gold);
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .comment-box {
+      min-width: 0;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 9px 5px 20px;
+      border: 1px solid #27272a;
+      border-radius: 999px;
+      background: var(--bg);
+    }
+
+    .comment-box input {
+      flex: 1;
+      min-width: 0;
+      height: 34px;
+      border: 0;
+      outline: 0;
+      color: #e5e5e5;
+      background: transparent;
+      font-size: 14px;
+    }
+
+    .comment-box input::placeholder {
+      color: var(--dim);
+    }
+
+    .comment-tools {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-right: 2px;
+    }
+
+    .tool-btn {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      color: #bdbdbd;
+      background: transparent;
+    }
+
+    .tool-btn.send {
+      color: #e8e8e8;
+      background: #27272a;
+    }
+
+    .article-image {
+      position: relative;
+      overflow: hidden;
+      min-height: 254px;
+      margin: 8px 0 15px;
+      border: 1px solid #333;
+      border-radius: 6px;
+      background: #111;
+    }
+
+    .article-image img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .article-title {
+      margin: 0 0 4px;
+      color: #fff;
+      font-size: 17px;
+      line-height: 1.2;
+      font-weight: 600;
+    }
+
+    .article-subtitle {
+      margin: 0 0 8px;
+      color: #ddd;
+      font-size: 13px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 1180px) {
+      .filter {
+        position: static;
+        margin-top: 12px;
+      }
+
+      .feed-toolbar {
+        gap: 10px;
+      }
+    }
+
+    @media (max-width: 920px) {
+      .top-actions {
+        width: auto;
+        gap: 12px;
+      }
+
+      .search {
+        display: none;
+      }
+
+      .brand {
+        min-width: 0;
+      }
+
+      .dashboard {
+        padding-right: 16px;
+        padding-left: 86px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .topbar {
+        height: 58px;
+        padding: 9px 12px;
+      }
+
+      .logo-mark {
+        width: 118px;
+      }
+
+      .profile-actions .icon-button:nth-child(2),
+      .shortcut {
+        display: none;
+      }
+
+      .sidebar {
+        top: auto;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 58px;
+        padding: 0;
+        flex-direction: row;
+        border-top: 1px solid #161616;
+        border-right: 0;
+      }
+
+      .side-stack {
+        flex: 1;
+        flex-direction: row;
+        justify-content: space-around;
+      }
+
+      .side-stack .side-item:nth-child(n+5),
+      .side-bottom {
+        display: none;
+      }
+
+      .side-item {
+        width: 20%;
+        height: 58px;
+        border-left: 0;
+        border-top: 2px solid transparent;
+      }
+
+      .side-item.active {
+        border-top-color: var(--gold);
+      }
+
+      .dashboard {
+        padding: 88px 14px 82px;
+      }
+
+      .dashboard::before,
+      .dashboard::after {
+        opacity: .26;
+      }
+
+      .intro {
+        margin-bottom: 28px;
+      }
+
+      .intro h1 {
+        font-size: 34px;
+      }
+
+      .tabs {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .tab {
+        flex: 1;
+        justify-content: center;
+        padding-right: 10px;
+        padding-left: 10px;
+      }
+
+      .post-card {
+        padding: 16px;
+      }
+
+      .post-head,
+      .actions-row {
+        align-items: flex-start;
+      }
+
+      .name-row {
+        flex-wrap: wrap;
+      }
+
+      .initials {
+        width: 42px;
+        height: 42px;
+      }
+
+      .attachment {
+        align-items: flex-start;
+        padding-right: 13px;
+      }
+
+      .seen-by {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .logo-mark {
+        width: 104px;
+      }
+
+      .profile-actions {
+        gap: 6px;
+      }
+
+      .avatar {
+        width: 34px;
+        height: 34px;
+      }
+
+      .intro h1 {
+        display: grid;
+        gap: 2px;
+        font-size: 31px;
+      }
+
+      .tabs {
+        border-radius: 18px;
+      }
+
+      .tab {
+        min-width: 0;
+        font-size: 12px;
+      }
+
+      .tab .pill-count {
+        display: none;
+      }
+
+      .author {
+        align-items: flex-start;
+      }
+
+      .meta-row {
+        gap: 6px;
+      }
+
+      .meta-row .separator {
+        display: none;
+      }
+
+      .file-icon {
+        width: 40px;
+        height: 40px;
+      }
+
+      .comment-box {
+        padding-left: 12px;
+      }
+
+      .comment-tools .tool-btn:first-child {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <button class="menu-dot" aria-label="Open menu">☰</button>
+      <img class="logo-mark" src="https://www.figma.com/api/mcp/asset/fe9d5080-a73c-4b97-9e27-359be4321398" alt="Masters' Union" />
+    </div>
+    <div class="top-actions">
+      <label class="search" aria-label="Search">
+        <span><span aria-hidden="true">⌕</span><input aria-label="Search" placeholder="Type to search..." /></span>
+        <span class="shortcut"><span class="key">CTRL</span><span>+</span><span class="key">K</span></span>
+      </label>
+      <div class="profile-actions">
+        <button class="icon-button notification" aria-label="Notifications">♕</button>
+        <button class="icon-button" aria-label="Shortcuts">⌘</button>
+        <span class="avatar"><img src="https://www.figma.com/api/mcp/asset/e0462209-08af-40df-bb95-53818b1a2751" alt="User profile" /></span>
+      </div>
+    </div>
+  </header>
+
+  <aside class="sidebar" aria-label="Primary navigation">
+    <nav class="side-stack">
+      <button class="side-item active" aria-label="Feed">⌂</button>
+      <button class="side-item" aria-label="Courses">▥</button>
+      <button class="side-item" aria-label="Academy">◒</button>
+      <button class="side-item" aria-label="People">♙</button>
+      <button class="side-item" aria-label="Messages">♡</button>
+      <button class="side-item" aria-label="Help">?</button>
+      <button class="side-item" aria-label="Profile card">▣</button>
+    </nav>
+    <div class="side-bottom">
+      <span class="avatar"><img src="https://www.figma.com/api/mcp/asset/e0462209-08af-40df-bb95-53818b1a2751" alt="" /></span>
+      <button class="side-item" aria-label="Log out">↪</button>
+    </div>
+  </aside>
+
+  <main class="dashboard">
+    <section class="feed-shell" aria-labelledby="feed-title">
+      <div class="intro">
+        <h1 id="feed-title">Welcome to <span>Universal</span> Feed</h1>
+        <p>Explore what's new, trending, and worth your attention.</p>
+      </div>
+
+      <div class="feed-toolbar">
+        <div class="tabs" role="tablist" aria-label="Feed filters">
+          <button class="tab active" type="button" role="tab" aria-selected="true" data-filter="latest">Latest <span class="pill-count">9</span></button>
+          <button class="tab" type="button" role="tab" aria-selected="false" data-filter="trending">Trending <span class="pill-count">9</span></button>
+          <button class="tab" type="button" role="tab" aria-selected="false" data-filter="you">For You</button>
+        </div>
+        <button class="filter" aria-label="Filter feed">≡</button>
+      </div>
+
+      <div class="feed-list">
+        <article class="post-group" data-feed-card data-kind="latest trending">
+          <div class="post-card">
+            <div class="post-head">
+              <div class="author">
+                <span class="initials">AS</span>
+                <div class="author-main">
+                  <div class="name-row">
+                    <span class="name">Amarpreet Singh</span>
+                    <span class="label job">Job Post</span>
+                  </div>
+                  <div class="meta-row">
+                    <span class="meta-group">Director of Operations <span class="meta-dot"></span> Techies Hub</span>
+                    <span class="separator">|</span>
+                    <span class="time">◷ 3 Days Ago</span>
+                  </div>
+                </div>
+              </div>
+              <button class="more" aria-label="Post options">...</button>
+            </div>
+
+            <p class="post-copy">I'm gonna share this UI/UX design e-book for free!</p>
+
+            <div class="attachment">
+              <div class="file-info">
+                <span class="file-icon"><span class="file-page"></span></span>
+                <div>
+                  <div class="file-name">uiux-ebook.pdf - file_qog0BwfhipuvE</div>
+                  <div class="file-size">6.4 MB</div>
+                </div>
+              </div>
+              <button class="download" aria-label="Download attachment">⇩</button>
+            </div>
+
+            <div class="actions-row">
+              <div class="post-actions">
+                <button class="action-button active" data-like type="button"><span class="heart">♥</span> Like <span class="divider"></span><span class="action-count" data-like-count>20</span></button>
+                <button class="action-button" type="button">▢ Comment <span class="divider"></span><span class="action-count">12</span></button>
+                <button class="action-button" type="button">↗ Share</button>
+              </div>
+              <div class="seen-by">
+                <span class="faces"><span class="face">A</span><span class="face">S</span><span class="face">T</span></span>
+                <span>You and 28 others</span>
+              </div>
+            </div>
+          </div>
+
+          <footer class="comment-footer">
+            <form class="comment-form">
+              <button class="add-btn" type="button" aria-label="Add attachment">+</button>
+              <label class="comment-box">
+                <input placeholder="Write a comment..." aria-label="Write a comment" />
+                <span class="comment-tools">
+                  <button class="tool-btn" type="button" aria-label="Add emoji">☺</button>
+                  <button class="tool-btn send" type="submit" aria-label="Send comment">↑</button>
+                </span>
+              </label>
+            </form>
+          </footer>
+        </article>
+
+        <article class="post-card" data-feed-card data-kind="latest trending you">
+          <div class="post-head">
+            <div class="author">
+              <span class="initials">AS</span>
+              <div class="author-main">
+                <div class="name-row">
+                  <span class="name">Amarpreet Singh</span>
+                  <span class="label article">Article</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-group">Director of Operations <span class="meta-dot"></span> Techies Hub</span>
+                  <span class="separator">|</span>
+                  <span class="time">◷ 3 Days Ago</span>
+                </div>
+              </div>
+            </div>
+            <button class="more" aria-label="Post options">...</button>
+          </div>
+
+          <h2 class="article-title">Goodbye Keywords, Hello Conversations:</h2>
+          <p class="article-subtitle">The Future of Search with AI</p>
+          <p class="post-copy">End of an Era: Why Google Search as We Know It Is Coming to an End</p>
+          <p class="post-copy">I never imagined I'd write this, but we're officially witnessing the end of an era. The way we "search" is fundamentally changing.</p>
+          <button class="read-more" type="button">Read More</button>
+
+          <div class="article-image">
+            <img src="https://www.figma.com/api/mcp/asset/68ef9ed7-1aee-48a6-b18d-8b1f49599578" alt="AI recommendations article illustration" />
+          </div>
+
+          <div class="actions-row">
+            <div class="post-actions">
+              <button class="action-button active" data-like type="button"><span class="heart">♥</span> Like <span class="divider"></span><span class="action-count" data-like-count>20</span></button>
+              <button class="action-button" type="button">▢ Comment <span class="divider"></span><span class="action-count">12</span></button>
+              <button class="action-button" type="button">↗ Share</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="post-card" data-feed-card data-kind="latest you">
+          <div class="post-head">
+            <div class="author">
+              <span class="initials">AS</span>
+              <div class="author-main">
+                <div class="name-row">
+                  <span class="name">Amarpreet Singh</span>
+                  <span class="label article">Article</span>
+                </div>
+                <div class="meta-row">
+                  <span class="meta-group">Director of Operations <span class="meta-dot"></span> Techies Hub</span>
+                  <span class="separator">|</span>
+                  <span class="time">◷ 3 Days Ago</span>
+                </div>
+              </div>
+            </div>
+            <button class="more" aria-label="Post options">...</button>
+          </div>
+
+          <h2 class="article-title">Goodbye Keywords, Hello Conversations:</h2>
+          <p class="article-subtitle">The Future of Search with AI</p>
+          <div class="post-copy long">
+            <span>End of an Era: Why Google Search as We Know It Is Coming to an End</span>
+            <span>I never imagined I'd write this, but we're officially witnessing the end of an era. The way we "search" is fundamentally changing. For years, the routine was simple: open Google, type a keyword, scan ten blue links, click, repeat.</span>
+            <span>That muscle memory defined how we accessed knowledge. But chat era is closing fast.</span>
+            <span>With OpenAI's new ChatGPT Atlas browser and tools like Perplexity, we've entered a world where "search" isn't about finding links. It's about getting work done.</span>
+          </div>
+          <button class="read-more" type="button">Read More</button>
+
+          <div class="actions-row">
+            <div class="post-actions">
+              <button class="action-button active" data-like type="button"><span class="heart">♥</span> Like <span class="divider"></span><span class="action-count" data-like-count>20</span></button>
+              <button class="action-button" type="button">▢ Comment <span class="divider"></span><span class="action-count">12</span></button>
+              <button class="action-button" type="button">↗ Share</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="post-group" data-feed-card data-kind="latest trending">
+          <div class="post-card">
+            <div class="post-head">
+              <div class="author">
+                <span class="initials">TG</span>
+                <div class="author-main">
+                  <div class="name-row">
+                    <span class="name">Tarun Gupta</span>
+                    <span class="label job">Job Post</span>
+                  </div>
+                  <div class="meta-row">
+                    <span class="meta-group">Director of Operations <span class="meta-dot"></span> Techies Hub</span>
+                    <span class="separator">|</span>
+                    <span class="time">◷ 3 Days Ago</span>
+                  </div>
+                </div>
+              </div>
+              <button class="more" aria-label="Post options">...</button>
+            </div>
+
+            <p class="post-copy">I'm gonna share this UI/UX design e-book for free!</p>
+
+            <div class="attachment">
+              <div class="file-info">
+                <span class="file-icon"><span class="file-page"></span></span>
+                <div>
+                  <div class="file-name">uiux-ebook.pdf - file_qog0BwfhipuvE</div>
+                  <div class="file-size">6.4 MB</div>
+                </div>
+              </div>
+              <button class="download" aria-label="Download attachment">⇩</button>
+            </div>
+
+            <div class="actions-row">
+              <div class="post-actions">
+                <button class="action-button active" data-like type="button"><span class="heart">♥</span> Like <span class="divider"></span><span class="action-count" data-like-count>20</span></button>
+                <button class="action-button" type="button">▢ Comment <span class="divider"></span><span class="action-count">12</span></button>
+                <button class="action-button" type="button">↗ Share</button>
+              </div>
+            </div>
+          </div>
+
+          <footer class="comment-footer">
+            <form class="comment-form">
+              <button class="add-btn" type="button" aria-label="Add attachment">+</button>
+              <label class="comment-box">
+                <input placeholder="Write a comment..." aria-label="Write a comment" />
+                <span class="comment-tools">
+                  <button class="tool-btn" type="button" aria-label="Add emoji">☺</button>
+                  <button class="tool-btn send" type="submit" aria-label="Send comment">↑</button>
+                </span>
+              </label>
+            </form>
+          </footer>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const tabs = document.querySelectorAll(".tab");
+    const cards = document.querySelectorAll("[data-feed-card]");
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const filter = tab.dataset.filter;
+        tabs.forEach((item) => {
+          const isActive = item === tab;
+          item.classList.toggle("active", isActive);
+          item.setAttribute("aria-selected", String(isActive));
+        });
+        cards.forEach((card) => {
+          card.classList.toggle("hidden", !card.dataset.kind.split(" ").includes(filter));
+        });
+      });
+    });
+
+    document.querySelectorAll("[data-like]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const count = button.querySelector("[data-like-count]");
+        const liked = button.classList.toggle("active");
+        const current = Number(count.textContent || "0");
+        count.textContent = String(Math.max(0, current + (liked ? 1 : -1)));
+      });
+    });
+
+    document.querySelectorAll(".comment-form").forEach((form) => {
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const input = form.querySelector("input");
+        if (!input.value.trim()) return;
+        input.value = "";
+        input.placeholder = "Comment posted";
+      });
+    });
+  </script>
+</body>
+</html>
